@@ -3,7 +3,6 @@ const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const consoleTable = require("console.table");
 
-
 const PORT = process.env.PORT || 3001;
 
 const db = mysql.createConnection(
@@ -38,7 +37,7 @@ function mainMenu() {
   inquirer.prompt(mainMenuOptions).then((res) => {
     switch (res.mainMenuList) {
       case "View all departments":
-        viewdepartments();
+        viewDepartments();
         break;
       case "View all roles":
         viewRoles();
@@ -61,4 +60,26 @@ function mainMenu() {
     }
   });
 }
+
+function viewDepartments() {
+  db.query(`SELECT * FROM departments`, function (err, results) {
+    console.table(results);
+    mainMenu();
+  });
+}
+
+function viewRoles() {
+  db.query(`SELECT * FROM roles`, function (err, results) {
+    console.table(results);
+    mainMenu();
+  });
+}
+
+function viewEmployees() {
+    db.query(`SELECT * FROM employees`, function (err, results) {
+        console.table(results);
+        mainMenu();
+    })
+}
+
 mainMenu();
