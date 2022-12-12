@@ -135,7 +135,9 @@ function addDepartment() {
 // enter the name, salary, and department for the role and that role is added to the database
 function addRoles() {
     db.query(`SELECT * FROM departments`, function (err, results) {
-    var departmentList = results.map(departments => departments.id)
+        var departmentList = [];
+        results.map(departments => departmentList.push(departments.id, departments.name))
+        // var departmentList = results.map(departments => departments.name)
     console.log(departmentList)
     inquirer
     .prompt([
@@ -157,19 +159,48 @@ function addRoles() {
         },
     ])
     .then((responses) => {
+        console.log(responses)
         db.query(`INSERT INTO roles (title, salary, department_id)
         VALUES ('${responses.roleAddInput}', '${responses.roleSalaryInput}', '${responses.deptRoleList}')`);
+    mainMenu()
     })
 })
-// .then((deptAnswer) => {
-//     db.query(`INSERT INTO departments (name)
-//       VALUES ('${deptAnswer.deptName}')`);
 }
 
+// employee’s first name, last name, role, and manager, and that employee is a
 function addEmployee() {
-
+    db.query(`SELECT * FROM roles`, function (err, results) {
+        var roleList = [];
+        results.map(roles => roleList.push(role.id, role.title))
+        // var departmentList = results.map(departments => departments.name)
+    console.log(departmentList)
+    inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "newFirstName",
+        message: "What is the employees first name?",
+      },
+      {
+        type: 'input',
+        name: 'newLastName',
+        message: 'What is the employees last name?',
+      },
+      {
+        type: "list",
+        name: 'newEmpRole',
+        message: 'What is the role of the new employee?',
+        choices: roleList
+      },
+    ])
+    .then((responses) => {
+        console.log(responses)
+        db.query(`INSERT INTO employees (first_name, last_name, role_id)
+        VALUES ('${responses.newFirstName}', '${responses.newLastName}', '${responses.newEmpRole}')`);
+    mainMenu()
+})
+})
 }
-
 function updateEmpRole() {
     
 }
