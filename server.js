@@ -67,19 +67,52 @@ function viewDepartments() {
     mainMenu();
   });
 }
-
+// job title, role id, department that role belongs to, salary for that role
 function viewRoles() {
-  db.query(`SELECT * FROM roles`, function (err, results) {
-    console.table(results);
-    mainMenu();
-  });
+  db.query(
+    `
+  SELECT
+  roles.title AS 'Job Title',
+  roles.id AS 'Role ID',
+  departments.name AS "Department Name",
+  roles.salary AS 'Salary'
+  FROM roles
+  LEFT JOIN departments
+      ON roles.department_id = departments.id
+  `,
+    function (err, results) {
+      console.table(results);
+      mainMenu();
+    }
+  );
+}
+// employee id, first name, last name, job title, department, salary, manager
+function viewEmployees() {
+  db.query(
+    `
+    SELECT
+    employees.id AS 'Employee ID',
+    employees.first_name AS "First Name",
+    employees.last_name AS "Last Name",
+    roles.title AS "Job Title",
+    departments.name AS "Department",
+    roles.salary AS "Salary",
+    employees.manager_id AS "Manager"
+    FROM employees
+    LEFT JOIN roles
+        ON roles.id = employees.role_id
+    LEFT JOIN departments
+        ON departments.id = roles.department_id
+    `,
+    function (err, results) {
+      console.table(results);
+      mainMenu();
+    }
+  );
 }
 
-function viewEmployees() {
-    db.query(`SELECT * FROM employees`, function (err, results) {
-        console.table(results);
-        mainMenu();
-    })
+function addDepartment() {
+  db.query(`INSERT INTO departments`);
 }
 
 mainMenu();
