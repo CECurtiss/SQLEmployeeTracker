@@ -15,6 +15,7 @@ const db = mysql.createConnection(
   console.log(`Connected to the company_db database.`)
 );
 
+// array to pass to inquirer prompt for main menu
 const mainMenuOptions = [
   {
     type: "list",
@@ -33,6 +34,7 @@ const mainMenuOptions = [
   },
 ];
 
+// Main menu for CLI
 function mainMenu() {
   inquirer.prompt(mainMenuOptions).then((res) => {
     switch (res.mainMenuList) {
@@ -61,13 +63,15 @@ function mainMenu() {
   });
 }
 
+// views departments in the database
 function viewDepartments() {
   db.query(`SELECT * FROM departments`, function (err, results) {
     console.table(results);
     mainMenu();
   });
 }
-// job title, role id, department that role belongs to, salary for that role
+
+// views roles in the database
 function viewRoles() {
   db.query(
     `
@@ -86,7 +90,7 @@ function viewRoles() {
     }
   );
 }
-// employee id, first name, last name, job title, department, salary, manager
+// views employees in the database
 function viewEmployees() {
   db.query(
     `
@@ -110,9 +114,34 @@ function viewEmployees() {
     }
   );
 }
-
+// adds department to the database
 function addDepartment() {
-  db.query(`INSERT INTO departments`);
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "deptName",
+        message: "What department would you like to add?",
+      },
+    ])
+    .then((deptAnswer) => {
+      db.query(`INSERT INTO departments (name)
+        VALUES ('${deptAnswer.deptName}')`);
+        mainMenu();
+    });
+}
+
+// enter the name, salary, and department for the role and that role is added to the database
+function addRoles() {
+
+}
+
+function addEmployee() {
+
+}
+
+function updateEmpRole() {
+    
 }
 
 mainMenu();
