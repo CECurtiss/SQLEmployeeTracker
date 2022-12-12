@@ -135,8 +135,8 @@ function addDepartment() {
 // enter the name, salary, and department for the role and that role is added to the database
 function addRoles() {
     db.query(`SELECT * FROM departments`, function (err, results) {
-    var departmentList = results.map(departments => departments.name)
-           
+    var departmentList = results.map(departments => departments.id)
+    console.log(departmentList)
     inquirer
     .prompt([
         {
@@ -156,8 +156,14 @@ function addRoles() {
             choices: departmentList
         },
     ])
+    .then((responses) => {
+        db.query(`INSERT INTO roles (title, salary, department_id)
+        VALUES ('${responses.roleAddInput}', '${responses.roleSalaryInput}', '${responses.deptRoleList}')`);
+    })
 })
-
+// .then((deptAnswer) => {
+//     db.query(`INSERT INTO departments (name)
+//       VALUES ('${deptAnswer.deptName}')`);
 }
 
 function addEmployee() {
