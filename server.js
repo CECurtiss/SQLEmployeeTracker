@@ -134,28 +134,29 @@ function addDepartment() {
 
 // enter the name, salary, and department for the role and that role is added to the database
 function addRoles() {
-    db.query(`SELECT * FROM departments`, function (err, res) => {
-        console.log(response)
-    })
+    db.query(`SELECT * FROM departments`, function (err, results) {
+    var departmentList = results.map(departments => departments.name)
+           
     inquirer
-        .prompt([
-            {
-                type: "input",
-                name: "roleAddInput",
-                message: "What role would you like to add?",  
-            },
-            {
-                type: "input",
-                name: "roleSalaryInput",
-                message: "What is the salary for this role?"
-            },
-            {
-                type: "list",
-                name: "deptRoleList",
-                message: "To which department will this role be added?",
-                choices: 
-            },
-        ])
+    .prompt([
+        {
+            type: "input",
+            name: "roleAddInput",
+            message: "What role would you like to add?",  
+        },
+        {
+            type: "input",
+            name: "roleSalaryInput",
+            message: "What is the salary for this role?"
+        },
+        {
+            type: "list",
+            name: "deptRoleList",
+            message: "To which department will this role be added?",
+            choices: departmentList
+        },
+    ])
+})
 
 }
 
