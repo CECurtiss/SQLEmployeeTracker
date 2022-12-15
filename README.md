@@ -2,6 +2,7 @@
 
 ## Description
 This is a CLI that can use a database to store information about employess, department info, and employee roles.
+[Demonstration video](https://drive.google.com/file/d/1kghvye5d1unrVWu5HXWRYfAO63v_aPeI/view)
        
 ## Table of Contents
        
