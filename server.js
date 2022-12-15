@@ -134,11 +134,11 @@ function addDepartment() {
 // enter the name, salary, and department for the role and that role is added to the database
 function addRoles() {
   db.query(`SELECT * FROM departments`, function (err, results) {
-    // returns an array of objects and stores in departmentList. 
+    // returns an array of objects and stores in departmentList.
     let departmentList = results.map((departments) => {
       return { name: departments.name, value: departments.id };
     });
-    console.log(departmentList);
+    // console.log(departmentList);
     inquirer
       .prompt([
         {
@@ -159,7 +159,7 @@ function addRoles() {
         },
       ])
       .then((responses) => {
-        console.log(responses);
+        // console.log(responses);
         db.query(`INSERT INTO roles (title, salary, department_id)
         VALUES ('${responses.roleAddInput}', '${responses.roleSalaryInput}', '${responses.deptRoleList}')`);
         mainMenu();
@@ -170,34 +170,49 @@ function addRoles() {
 // employee’s first name, last name, role, and manager, and that employee is a
 function addEmployee() {
   db.query(`SELECT * FROM roles`, function (err, results) {
-    let roleList = results.map((roles) => {
-      return { name: roles.title, value: roles.id}});
-  
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "newFirstName",
-          message: "What is the employees first name?",
-        },
-        {
-          type: "input",
-          name: "newLastName",
-          message: "What is the employees last name?",
-        },
-        {
-          type: "list",
-          name: "newEmpRole",
-          message: "What is the role of the new employee?",
-          choices: roleList,
-        },
-      ])
-      .then((responses) => {
-        console.log(responses);
-        db.query(`INSERT INTO employees (first_name, last_name, role_id)
-        VALUES ('${responses.newFirstName}', '${responses.newLastName}', '${responses.newEmpRole}')`);
-        mainMenu();
+    db.query(`SELECT * FROM employees`, function (err, resemp) {
+      let roleList = results.map((roles) => {
+        return { name: roles.title, value: roles.id };
       });
+      let employeeList = resemp.map((employees) => {
+        return {
+          name: employees.first_name.concat(" " + employees.last_name),
+          value: employees.id,
+        };
+      });
+
+      inquirer
+        .prompt([
+          {
+            type: "input",
+            name: "newFirstName",
+            message: "What is the employees first name?",
+          },
+          {
+            type: "input",
+            name: "newLastName",
+            message: "What is the employees last name?",
+          },
+          {
+            type: "list",
+            name: "newEmpRole",
+            message: "What is the role of the new employee?",
+            choices: roleList,
+          },
+          {
+            type: "list",
+            name: "newEmpManager",
+            message: "Who will be this employees manager?",
+            choices: employeeList,
+          },
+        ])
+        .then((responses) => {
+          // console.log(responses);
+          db.query(`INSERT INTO employees (first_name, last_name, role_id, manager_id)
+          VALUES ('${responses.newFirstName}', '${responses.newLastName}', '${responses.newEmpRole}', '${responses.newEmpManager}')`);
+          mainMenu();
+        });
+    });
   });
 }
 function updateEmpRole() {
@@ -209,7 +224,6 @@ function updateEmpRole() {
           value: employees.id,
         };
       });
-      
 
       let roleSelectList = resrole.map((roles) => {
         return { name: roles.title, value: roles.id };
@@ -233,15 +247,15 @@ function updateEmpRole() {
             name: "managerSelect",
             message: "What is the name of the employees Manager?",
             choices: employeeList,
-          }
+          },
         ])
         .then((response) => {
           db.query(`
           UPDATE employees
           SET role_id = '${response.roleSelect}', manager_id = '${response.managerSelect}'
           WHERE id = '${response.employeeSelect}'
-          `)
-          console.log(response);
+          `);
+          // console.log(response);
           mainMenu();
         });
     });
